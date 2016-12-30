@@ -1,0 +1,13 @@
+configure terminal
+interface ethernet 0/1
+ip address 172.16.45.2 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 172.16.1.1 255.255.255.0
+exit
+router ospf 1
+network 172.16.1.1 0.0.0.255 area 34
+network 172.16.45.2 0.0.0.255 area 0
+default-information originate always
+end

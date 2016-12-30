@@ -1,0 +1,28 @@
+configure terminal
+
+vtp mode transparent
+vtp domain CGRFinest
+vtp password SCP4Eva
+
+interface ethernet 0/0
+description ISP-->C1
+bandwidth 64
+no shutdown
+ip address 10.1.66.3 255.255.255.0
+exit
+
+interface loopback 1
+ip address 192.168.1.1 255.255.0.0
+ip summary-address eigrp 10 192.168.0.0/16
+exit
+
+router eigrp 10
+network 10.1.0.0 0.0.255.255
+network 192.168.0.0 0.0.255.255
+no auto-summary
+exit
+
+access-list 50 permit 10.1.99.0 255.255.255.0
+line vty 0 4
+access-class 50 in
+end

@@ -1,0 +1,85 @@
+configure terminal
+
+interface ethernet 0/2
+no switchport
+description C2-->C1
+bandwidth 64
+no shutdown
+ip address 10.1.10.2 255.255.255.0
+exit
+
+
+interface ethernet 1/1
+no switchport
+description C2-->D3
+bandwidth 64
+no shutdown
+ip address 10.1.15.2 255.255.255.0
+exit
+
+interface ethernet 2/0
+no switchport
+description C2-->D4
+bandwidth 64
+no shutdown
+ip address 10.1.16.2 255.255.255.0
+exit
+
+interface ethernet 3/0
+no switchport
+description C2-->D1
+bandwidth 64
+no shutdown
+ip address 10.1.17.2 255.255.255.0
+exit
+
+interface ethernet 3/2
+no switchport
+description C2-->D2
+bandwidth 64
+no shutdown
+ip address 10.1.18.2 255.255.255.0
+exit
+
+router eigrp 10
+network 10.1.0.0 0.0.255.255
+no auto-summary
+exit
+
+
+access-list 50 permit 10.1.99.0 255.255.255.0
+line vty 0 4
+access-class 50 in
+
+vlan 76
+name DataCenter1
+exit
+
+vlan 77
+name DataCenter2
+exit
+
+vtp mode transparent
+vtp domain CGRfinest
+vtp password SCP4Eva
+
+interface ethernet 0/0
+switchport mode access
+switchport access vlan 76
+exit
+
+interface ethernet 0/1
+switchport mode access
+switchport access vlan 77
+exit
+
+interface vlan 76
+ip address 10.1.76.1 255.255.255.0
+no shutdown
+exit
+interface vlan 77
+ip address 10.1.77.1 255.255.255.0
+no shutdown
+exit
+ip routing
+end

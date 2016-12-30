@@ -1,0 +1,44 @@
+conf t
+
+interface loopback 0
+ip address 10.2.2.2 255.255.255.0
+exit
+interface loopback 200
+ip address 10.20.0.1 255.255.255.0
+exit
+interface loopback 201 
+ip address 10.20.1.1 255.255.255.0
+exit
+interface loopback 202
+ip address 10.20.2.1 255.255.255.0
+exit
+interface loopback 203
+ip address 10.20.3.1 255.255.255.0
+exit
+
+interface ethernet 0/1
+ip address 10.1.102.2 255.255.255.248
+no shutdown
+exit
+
+interface ethernet 0/0
+ip address 10.1.203.1 255.255.255.248
+no shutdown
+exit
+
+
+router ospf 1
+network 10.0.0.0 0.255.255.255 area 0
+exit
+
+
+router bgp 65500
+neighbor 10.1.102.1 remote-as 65500
+neighbor 10.1.102.1 next-hop-self
+neighbor 10.1.203.2 remote-as 65500
+neighbor 10.1.203.2 next-hop-self
+network 10.2.2.0 mask 255.255.255.0
+network 10.20.0.0 mask 255.255.252.0
+exit
+
+ip route 10.20.0.0 255.255.252.0 Null0

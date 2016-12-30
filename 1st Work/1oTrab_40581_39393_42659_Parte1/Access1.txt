@@ -1,0 +1,62 @@
+configure terminal
+vlan 3
+name VLAN3
+exit
+vlan 2
+name VLAN2
+exit
+interface ethernet 0/1
+switchport mode access
+switchport access vlan 3
+exit
+interface ethernet 0/2
+switchport mode access
+switchport access vlan 2
+exit
+vtp mode transparent
+vtp domain CGRfinest
+vtp password SCP4Eva
+interface ethernet 0/0
+shutdown
+switchport mode access
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 93
+switchport trunk allowed vlan 2,3
+no shutdown
+exit
+interface ethernet 0/3
+shutdown
+switchport mode access
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 93
+switchport trunk allowed vlan 2,3
+no shutdown
+exit
+interface ethernet 1/0
+shutdown
+switchport mode access
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 93
+switchport trunk allowed vlan 2,3
+no shutdown
+exit
+
+spanning-tree mode rapid-pvst
+
+access-list 50 permit 10.1.99.0 255.255.255.0
+line vty 0 4
+access-class 50 in
+
+vlan 98
+name ManagementLeftPOD
+exit
+
+interface vlan 98
+ip address 10.1.98.1 255.255.255.0
+no shutdown
+exit
+
+end

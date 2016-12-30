@@ -1,0 +1,22 @@
+configure terminal
+interface ethernet 0/0
+ip address 172.16.12.2 255.255.255.0
+no shutdown
+exit
+interface loopback 0
+ip address 172.16.4.1 255.255.255.0
+exit
+interface ethernet 0/2
+ip address 172.16.99.1 255.255.255.0
+no shutdown
+exit
+router ospf 1
+network 172.16.12.2 0.0.0.255 area 43
+network 172.16.4.1 0.0.0.255 area 43
+network 172.16.99.1 0.0.0.255 area 0
+area 43 stub
+end
+
+Como corrigir o problema de conexão:
+
+Como a área 43 não está ligada à área 0, isto é, a backbone area, só a área 32 é que consegue "pingar" pois está diretamente conectada. Para resolver o problema vamos ligar a área 43 à área 0.

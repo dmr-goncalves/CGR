@@ -1,0 +1,53 @@
+configure terminal
+
+interface ethernet 0/0
+no switchport
+description D3-->D4
+bandwidth 64
+no shutdown
+ip address 10.1.9.1 255.255.255.0
+exit
+interface ethernet 0/3
+no switchport
+description D3-->A4
+bandwidth 64
+no shutdown
+ip address 10.1.7.2 255.255.255.0
+exit
+interface ethernet 1/0
+no switchport
+description D3-->A3
+bandwidth 64
+no shutdown
+ip address 10.1.6.2 255.255.255.0
+exit
+
+interface ethernet 3/0
+no switchport
+description D3-->C1
+bandwidth 64
+no shutdown
+ip address 10.1.13.1 255.255.255.0
+ip summary-address eigrp 10 10.1.4.0/20
+exit
+
+
+interface ethernet 1/1
+no switchport
+description D3-->C2
+bandwidth 64
+no shutdown
+ip address 10.1.15.1 255.255.255.0
+ip summary-address eigrp 10 10.1.4.0/20
+exit
+
+router eigrp 10
+network 10.1.0.0 0.0.255.255
+no auto-summary
+exit
+
+
+access-list 50 permit 10.1.99.0 255.255.255.0
+line vty 0 4
+access-class 50 in
+end

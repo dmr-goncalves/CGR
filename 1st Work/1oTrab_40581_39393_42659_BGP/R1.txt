@@ -1,0 +1,48 @@
+conf t
+
+interface loopback 1
+ip address 10.1.1.1 255.255.255.0
+exit
+
+interface S 2/0
+ip address 192.168.14.1 255.255.255.252
+no shutdown
+exit
+
+interface ethernet 0/0
+ip address 10.1.103.1 255.255.255.248
+no shutdown
+exit
+
+interface ethernet 0/1
+ip address 10.1.102.1 255.255.255.248
+no shutdown
+exit
+
+
+router ospf 1
+network 10.0.0.0 0.0.255.255 area 0
+network 192.168.0.0 0.0.255.255 area 0
+passive-interface serial 2/0
+exit 
+
+
+router bgp 65500
+neighbor 192.168.14.2 remote-as 64600 
+neighbor 192.168.14.2 route-map RM_SET_LP in
+neighbor 192.168.14.2 route-map RM_SET_MED out
+neighbor 192.168.14.2 next-hop-self
+neighbor 10.1.103.2 remote-as 65500
+neighbor 10.1.103.2 next-hop-self
+neighbor 10.1.102.2 remote-as 65500 
+neighbor 10.1.102.2 next-hop-self
+network 10.1.1.0 mask 255.255.255.0
+exit
+
+route-map RM_SET_LP permit 10
+set local-preference 5000
+exit
+
+route-map RM_SET_MED permit 10 
+set metric 50
+exit

@@ -1,0 +1,47 @@
+conf t
+interface loopback 3
+ip address 10.3.3.3 255.255.255.0
+exit
+
+interface ethernet 0/0
+ip address 10.1.103.2 255.255.255.248
+no shutdown
+exit
+
+interface ethernet 0/2
+ip address 192.168.34.1 255.255.255.252
+no shutdown
+exit
+
+interface ethernet 0/1
+ip address 10.1.203.2 255.255.255.248
+no shutdown
+exit
+
+
+router ospf 1
+network 10.0.0.0 0.255.255.255 area 0
+network 192.168.0.0 0.0.255.255 area 0
+passive-interface ethernet 0/2
+exit
+
+
+router bgp 65500
+neighbor 192.168.34.2 remote-as 64600
+neighbor 192.168.34.2 next-hop-self
+neighbor 192.168.34.2 route-map RM_SET_LP in
+neighbor 192.168.34.2 route-map RM_SET_MED out
+neighbor 10.1.203.1 remote-as 65500 
+neighbor 10.1.203.1  next-hop-self
+neighbor 10.1.103.1 remote-as 65500
+neighbor 10.1.103.1 next-hop-self
+network 10.3.3.0 mask 255.255.255.0
+exit
+
+route-map RM_SET_LP permit 10
+set local-preference 50
+exit
+
+route-map RM_SET_MED permit 10 
+set metric 200
+exit

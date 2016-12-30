@@ -1,0 +1,18 @@
+configure terminal
+interface loopback 0
+ip address 172.16.3.1 255.255.255.0
+exit
+interface ethernet 0/1
+ip address 172.16.23.2 255.255.255.0
+no shutdown
+exit
+interface ethernet 0/0
+ip address 172.16.12.1 255.255.255.0
+no shutdown
+exit
+router ospf 1
+network 172.16.23.2 0.0.0.255 area 32
+network 172.16.3.1 0.0.0.255 area 32
+network 172.16.12.1 0.0.0.255 area 43
+area 43 stub
+end

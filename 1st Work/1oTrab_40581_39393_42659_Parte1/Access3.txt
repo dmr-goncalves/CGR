@@ -1,0 +1,45 @@
+configure terminal
+vlan 4
+name VLAN4
+exit
+interface ethernet 0/1
+switchport mode access
+switchport access vlan 4
+exit
+vtp mode transparent
+vtp domain CGRFinest
+vtp password SCP4Eva
+interface vlan 4
+ip address 10.1.4.1 255.255.255.0
+no shutdown
+exit
+interface ethernet 0/0
+no switchport
+description A3-->A4
+bandwidth 64
+no shutdown
+ip address 10.1.8.1 255.255.255.0
+exit
+interface ethernet 0/3
+no switchport
+description A3-->D4
+bandwidth 64
+no shutdown
+ip address 10.1.7.1 255.255.255.0
+exit
+interface ethernet 1/0
+no switchport
+description A3-->D3
+bandwidth 64
+no shutdown
+ip address 10.1.6.1 255.255.255.0
+exit
+router eigrp 10
+network 10.1.0.0 0.0.255.255
+no auto-summary
+exit
+
+access-list 50 permit 10.1.99.0 255.255.255.0
+line vty 0 4
+access-class 50 in
+end
